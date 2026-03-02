@@ -24,7 +24,7 @@ export const useTimerStore = create<TimerStore>((set, get) => ({
     set({ timers: loaded })
   },
 
-  addTimer: (label = 'Nova demanda') => {
+  addTimer: (label = 'Novo título') => {
     const newTimer: Timer = {
       id: uuidv4(),
       label,

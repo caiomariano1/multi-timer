@@ -24,6 +24,10 @@ function createMainWindow() {
     resizable: true,
   })
 
+  mainWindow.on('restore', () => {
+    miniWindows.forEach((win) => win.close())
+  })
+
   if (isDev) {
     mainWindow.loadURL('http://localhost:5173')
   } else {
@@ -41,9 +45,9 @@ function createMiniWindow(timerId: string, label: string) {
 
   const win = new BrowserWindow({
     width: 220,
-    height: 130,
+    height: 155,
     x: width - 240,
-    y: height - 160,
+    y: height - 185,
     frame: false,
     transparent: true,
     alwaysOnTop: true,
@@ -61,6 +65,7 @@ function createMiniWindow(timerId: string, label: string) {
     ? `http://localhost:5173?mini=true&timerId=${timerId}&label=${encodeURIComponent(label)}`
     : `file://${path.join(__dirname, '../renderer/index.html')}?mini=true&timerId=${timerId}&label=${encodeURIComponent(label)}`
 
+  win.setAlwaysOnTop(true, 'screen-saver')
   win.loadURL(url)
   miniWindows.set(timerId, win)
 
@@ -72,7 +77,7 @@ function createMiniWindow(timerId: string, label: string) {
 
 ipcMain.on('open-mini', (_event, { timerId, label }) => {
   createMiniWindow(timerId, label)
-  mainWindow?.hide()
+  mainWindow?.minimize()
 })
 
 ipcMain.on('close-mini', (_event, timerId) => {
@@ -90,6 +95,10 @@ ipcMain.on('expand-mini', (_event, timerId) => {
 })
 
 ipcMain.on('minimize-app', () => { mainWindow?.minimize() })
+ipcMain.on('maximize-app', () => {
+  if (mainWindow?.isMaximized()) mainWindow.unmaximize()
+  else mainWindow?.maximize()
+})
 ipcMain.on('close-app', () => { app.quit() })
 
 app.whenReady().then(() => {

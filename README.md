@@ -63,6 +63,7 @@ multi-timer/
 ## Como a persistência funciona
 
 Cada timer armazena:
+
 - `elapsedMs` — tempo acumulado em milissegundos
 - `isRunning` — se estava rodando quando o app foi fechado
 - `startedAt` — timestamp de quando o play foi acionado
@@ -77,6 +78,5 @@ Isso faz o tempo continuar corretamente mesmo após desligar o PC.
 
 ## Evoluções futuras
 
+- Integração com Jira
 - Exportar relatório de tempo por demanda (CSV/Excel)
-- Backend .NET com banco de dados para histórico
-- Integração com Jira/Azure DevOps para buscar nomes de cards automaticamente

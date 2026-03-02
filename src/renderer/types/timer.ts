@@ -12,6 +12,7 @@ export interface ElectronAPI {
   closeMini: (timerId: string) => void
   expandMini: (timerId: string) => void
   minimizeApp: () => void
+  maximizeApp: () => void
   closeApp: () => void
   onMiniClosed: (callback: (timerId: string) => void) => void
 }
