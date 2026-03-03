@@ -222,19 +222,22 @@ body,
 .timer-card__header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  min-height: 32px;
   margin-bottom: 14px;
 }
 
 .timer-card__label-wrapper {
   flex: 1;
   min-width: 0;
+  display: flex;
+  justify-content: center;
 }
 
 .timer-card__label {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 0;
+  position: relative;
   font-size: 13px;
   font-weight: 500;
   color: var(--text-secondary);
@@ -245,10 +248,7 @@ body,
   transition:
     background 0.15s,
     color 0.15s;
-  max-width: 220px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow: visible;
 }
 
 .timer-card__label:hover {
@@ -256,12 +256,25 @@ body,
   color: var(--text-primary);
 }
 
+.timer-card__label-text {
+  display: inline-block;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
 .timer-card__edit-icon {
+  position: absolute;
+  left: calc(100% + 4px);
+  top: 50%;
+  transform: translateY(-50%);
   width: 12px;
   height: 12px;
   opacity: 0;
-  flex-shrink: 0;
   transition: opacity 0.15s;
+  pointer-events: none;
 }
 
 .timer-card__label:hover .timer-card__edit-icon {
@@ -282,9 +295,55 @@ body,
   box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.15);
 }
 
-.timer-card__actions {
+/* Confirmação de exclusão inline */
+.timer-card__delete-confirm-msg {
+  flex: 1;
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.timer-card__delete-confirm-msg strong {
+  color: var(--text-primary);
+}
+
+.timer-card__delete-confirm-actions {
   display: flex;
-  gap: 2px;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.timer-card__confirm-btn {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.timer-card__confirm-btn--cancel {
+  background: none;
+  border-color: var(--border-light);
+  color: var(--text-secondary);
+}
+
+.timer-card__confirm-btn--cancel:hover {
+  background: var(--border-light);
+  color: var(--text-primary);
+}
+
+.timer-card__confirm-btn--danger {
+  background: var(--danger);
+  color: white;
+}
+
+.timer-card__confirm-btn--danger:hover {
+  background: #a8231a;
 }
 
 .timer-card__icon-btn {
@@ -336,6 +395,7 @@ body,
   line-height: 1;
   min-width: 60px;
   text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
 .timer-card__colon {
@@ -355,6 +415,7 @@ body,
   color: var(--text-muted);
   align-self: baseline;
   margin-left: 1px;
+  font-variant-numeric: tabular-nums;
 }
 
 .timer-card__unit {
@@ -461,9 +522,11 @@ html body #root {
   background: #ffffff;
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  padding-bottom: 18px;
   overflow: hidden;
-  width: 220px;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .mini-timer__drag-bar {
@@ -525,40 +588,48 @@ html body #root {
 }
 
 .mini-timer__display {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mini-timer__display-row {
   display: flex;
   align-items: baseline;
   justify-content: center;
   gap: 1px;
-  padding: 10px 0 0;
 }
 
 .mini-timer__digits {
   font-family: var(--font-display);
-  font-size: 26px;
+  font-size: clamp(26px, 11.8vw, 120px);
   font-weight: 400;
   color: var(--text-primary);
   letter-spacing: -0.5px;
   line-height: 1;
-  min-width: 33px;
+  min-width: clamp(33px, 15vw, 135px);
   text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
 .mini-timer__colon {
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: clamp(22px, 10vw, 100px);
   font-weight: 400;
   color: var(--text-muted);
   line-height: 1;
-  margin: 0 1px;
+  margin: 0 clamp(1px, 0.5vw, 4px);
   padding-bottom: 1px;
 }
 
 .mini-timer__cs {
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: clamp(13px, 5.9vw, 60px);
   font-weight: 400;
   color: var(--text-muted);
   align-self: baseline;
+  font-variant-numeric: tabular-nums;
 }
 
 .mini-timer__unit {
@@ -568,23 +639,23 @@ html body #root {
 }
 
 .mini-timer__unit-label {
-  font-size: 9.5px;
+  font-size: clamp(9.5px, 4.3vw, 44px);
   color: var(--text-muted);
   letter-spacing: 0.3px;
-  margin-top: 1px;
+  margin-top: clamp(1px, 0.5vw, 4px);
 }
 
 .mini-timer__controls {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-top: 10px;
+  gap: clamp(10px, 4.5vw, 24px);
+  padding-bottom: clamp(14px, 6vw, 32px);
 }
 
 .mini-timer__play-btn {
-  width: 36px;
-  height: 36px;
+  width: clamp(36px, 16.4vw, 64px);
+  height: clamp(36px, 16.4vw, 64px);
   border-radius: 50%;
   border: none;
   background: var(--accent);
@@ -600,8 +671,8 @@ html body #root {
 }
 
 .mini-timer__play-btn svg {
-  width: 15px;
-  height: 15px;
+  width: clamp(15px, 6.8vw, 28px);
+  height: clamp(15px, 6.8vw, 28px);
 }
 
 .mini-timer__play-btn:hover {
@@ -622,8 +693,8 @@ html body #root {
 }
 
 .mini-timer__reset-btn {
-  width: 36px;
-  height: 36px;
+  width: clamp(36px, 16.4vw, 64px);
+  height: clamp(36px, 16.4vw, 64px);
   border-radius: 50%;
   border: 1.5px solid var(--border);
   background: white;
@@ -638,8 +709,8 @@ html body #root {
 }
 
 .mini-timer__reset-btn svg {
-  width: 15px;
-  height: 15px;
+  width: clamp(15px, 6.8vw, 28px);
+  height: clamp(15px, 6.8vw, 28px);
 }
 
 .mini-timer__reset-btn:hover {

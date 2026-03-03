@@ -15,6 +15,7 @@ export interface ElectronAPI {
   maximizeApp: () => void
   closeApp: () => void
   onMiniClosed: (callback: (timerId: string) => void) => void
+  onTimersChanged: (callback: () => void) => void
 }
 
 declare global {

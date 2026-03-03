@@ -17,6 +17,7 @@ export const TimerCard = ({ timer, onMinimize }: TimerCardProps) => {
   const { h, min, seg, cs } = formatTime(displayMs);
   const [editing, setEditing] = useState(false);
   const [labelValue, setLabelValue] = useState(timer.label);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleLabelBlur = () => {
@@ -38,71 +39,93 @@ export const TimerCard = ({ timer, onMinimize }: TimerCardProps) => {
   return (
     <div className="timer-card">
       <div className="timer-card__header">
-        <div className="timer-card__label-wrapper">
-          {editing ? (
-            <input
-              ref={inputRef}
-              className="timer-card__label-input"
-              value={labelValue}
-              onChange={(e) => setLabelValue(e.target.value)}
-              onBlur={handleLabelBlur}
-              onKeyDown={handleLabelKeyDown}
-              autoFocus
-              maxLength={40}
-            />
-          ) : (
-            <span
-              className="timer-card__label"
-              onClick={() => setEditing(true)}
-              title="Clique para renomear"
-            >
-              {timer.label}
-              <svg
-                className="timer-card__edit-icon"
-                viewBox="0 0 16 16"
-                fill="none"
+        {confirmingDelete ? (
+          <>
+            <span className="timer-card__delete-confirm-msg">
+              Excluir <strong>"{timer.label}"</strong>?
+            </span>
+            <div className="timer-card__delete-confirm-actions">
+              <button
+                className="timer-card__confirm-btn timer-card__confirm-btn--cancel"
+                onClick={() => setConfirmingDelete(false)}
               >
+                Cancelar
+              </button>
+              <button
+                className="timer-card__confirm-btn timer-card__confirm-btn--danger"
+                onClick={() => removeTimer(timer.id)}
+              >
+                Excluir
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <button
+              className="timer-card__icon-btn"
+              onClick={() => onMinimize(timer)}
+              title="Manter na parte inferior"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="18px"
+                viewBox="0 -960 960 960"
+                width="18px"
+                fill="currentColor"
+              >
+                <path d="M80-520v-66.67h166.67L55.33-777.33l47.34-47.34L293.33-634v-166H360v280H80Zm66.67 360q-27 0-46.84-19.83Q80-199.67 80-226.67v-220h66.67v220H480V-160H146.67Zm666.66-280v-293.33h-380V-800h380q27 0 46.84 19.83Q880-760.33 880-733.33V-440h-66.67ZM546.67-160v-213.33H880V-160H546.67Z" />
+              </svg>
+            </button>
+            <div className="timer-card__label-wrapper">
+              {editing ? (
+                <input
+                  ref={inputRef}
+                  className="timer-card__label-input"
+                  value={labelValue}
+                  onChange={(e) => setLabelValue(e.target.value)}
+                  onBlur={handleLabelBlur}
+                  onKeyDown={handleLabelKeyDown}
+                  autoFocus
+                  maxLength={40}
+                />
+              ) : (
+                <span
+                  className="timer-card__label"
+                  onClick={() => setEditing(true)}
+                  title="Clique para renomear"
+                >
+                  <span className="timer-card__label-text">{timer.label}</span>
+                  <svg
+                    className="timer-card__edit-icon"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                  >
+                    <path
+                      d="M11.5 2.5l2 2L5 13H3v-2L11.5 2.5z"
+                      stroke="currentColor"
+                      strokeWidth="1.2"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              )}
+            </div>
+            <button
+              className="timer-card__icon-btn timer-card__icon-btn--danger"
+              onClick={() => setConfirmingDelete(true)}
+              title="Remover cronômetro"
+            >
+              <svg viewBox="0 0 16 16" fill="none">
                 <path
-                  d="M11.5 2.5l2 2L5 13H3v-2L11.5 2.5z"
+                  d="M4 4l8 8M12 4l-8 8"
                   stroke="currentColor"
-                  strokeWidth="1.2"
-                  strokeLinejoin="round"
+                  strokeWidth="1.3"
+                  strokeLinecap="round"
                 />
               </svg>
-            </span>
-          )}
-        </div>
-        <div className="timer-card__actions">
-          <button
-            className="timer-card__icon-btn"
-            onClick={() => onMinimize(timer)}
-            title="Manter na parte inferior"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="18px"
-              viewBox="0 -960 960 960"
-              width="18px"
-              fill="currentColor"
-            >
-              <path d="M80-520v-66.67h166.67L55.33-777.33l47.34-47.34L293.33-634v-166H360v280H80Zm66.67 360q-27 0-46.84-19.83Q80-199.67 80-226.67v-220h66.67v220H480V-160H146.67Zm666.66-280v-293.33h-380V-800h380q27 0 46.84 19.83Q880-760.33 880-733.33V-440h-66.67ZM546.67-160v-213.33H880V-160H546.67Z" />
-            </svg>
-          </button>
-          <button
-            className="timer-card__icon-btn timer-card__icon-btn--danger"
-            onClick={() => removeTimer(timer.id)}
-            title="Remover cronômetro"
-          >
-            <svg viewBox="0 0 16 16" fill="none">
-              <path
-                d="M4 4l8 8M12 4l-8 8"
-                stroke="currentColor"
-                strokeWidth="1.3"
-                strokeLinecap="round"
-              />
-            </svg>
-          </button>
-        </div>
+            </button>
+          </>
+        )}
       </div>
 
       <div className="timer-card__display">

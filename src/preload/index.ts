@@ -12,4 +12,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   closeApp: () => ipcRenderer.send('close-app'),
   onMiniClosed: (callback: (timerId: string) => void) =>
     ipcRenderer.on('mini-closed', (_event, timerId) => callback(timerId)),
+  onTimersChanged: (callback: () => void) =>
+    ipcRenderer.on('timers-changed', () => callback()),
 })

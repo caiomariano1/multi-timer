@@ -26,6 +26,7 @@ function createMainWindow() {
 
   mainWindow.on('restore', () => {
     miniWindows.forEach((win) => win.close())
+    mainWindow?.webContents.send('timers-changed')
   })
 
   if (isDev) {
@@ -46,13 +47,17 @@ function createMiniWindow(timerId: string, label: string) {
   const win = new BrowserWindow({
     width: 220,
     height: 155,
+    minWidth: 220,
+    minHeight: 155,
+    maxWidth: 480,
+    maxHeight: 480,
     x: width - 240,
     y: height - 185,
     frame: false,
     transparent: true,
     alwaysOnTop: true,
     skipTaskbar: true,
-    resizable: false,
+    resizable: true,
     movable: true,
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),
@@ -85,6 +90,7 @@ ipcMain.on('close-mini', (_event, timerId) => {
   if (win) { win.close(); miniWindows.delete(timerId) }
   mainWindow?.show()
   mainWindow?.focus()
+  mainWindow?.webContents.send('timers-changed')
 })
 
 ipcMain.on('expand-mini', (_event, timerId) => {
@@ -92,6 +98,7 @@ ipcMain.on('expand-mini', (_event, timerId) => {
   if (win) { win.close(); miniWindows.delete(timerId) }
   mainWindow?.show()
   mainWindow?.focus()
+  mainWindow?.webContents.send('timers-changed')
 })
 
 ipcMain.on('minimize-app', () => { mainWindow?.minimize() })

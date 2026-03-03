@@ -80,21 +80,23 @@ const MiniTimerInner = ({ timerId, label }: MiniTimerProps) => {
       </div>
 
       <div className="mini-timer__display">
-        <div className="mini-timer__unit">
-          <span className="mini-timer__digits">{h}</span>
-          <span className="mini-timer__unit-label">h</span>
+        <div className="mini-timer__display-row">
+          <div className="mini-timer__unit">
+            <span className="mini-timer__digits">{h}</span>
+            <span className="mini-timer__unit-label">h</span>
+          </div>
+          <span className="mini-timer__colon">:</span>
+          <div className="mini-timer__unit">
+            <span className="mini-timer__digits">{min}</span>
+            <span className="mini-timer__unit-label">min</span>
+          </div>
+          <span className="mini-timer__colon">:</span>
+          <div className="mini-timer__unit">
+            <span className="mini-timer__digits">{seg}</span>
+            <span className="mini-timer__unit-label">seg</span>
+          </div>
+          <span className="mini-timer__cs">,{cs}</span>
         </div>
-        <span className="mini-timer__colon">:</span>
-        <div className="mini-timer__unit">
-          <span className="mini-timer__digits">{min}</span>
-          <span className="mini-timer__unit-label">min</span>
-        </div>
-        <span className="mini-timer__colon">:</span>
-        <div className="mini-timer__unit">
-          <span className="mini-timer__digits">{seg}</span>
-          <span className="mini-timer__unit-label">seg</span>
-        </div>
-        <span className="mini-timer__cs">,{cs}</span>
       </div>
 
       <div className="mini-timer__controls">

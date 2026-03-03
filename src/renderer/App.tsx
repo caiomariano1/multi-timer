@@ -26,6 +26,13 @@ export default function App() {
     });
   }, []);
 
+  // Recarrega estado do localStorage quando main window é restaurada após uma mini window
+  useEffect(() => {
+    window.electronAPI?.onTimersChanged(() => {
+      loadFromStorage();
+    });
+  }, []);
+
   if (isMini) {
     return <MiniTimer timerId={miniTimerId} label={miniLabel} />;
   }

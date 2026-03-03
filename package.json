@@ -30,7 +30,7 @@
   },
   "build": {
     "appId": "com.multitimer.app",
-    "productName": "Multi Timer",
+    "productName": "MultiTimer",
     "directories": {
       "output": "release"
     },

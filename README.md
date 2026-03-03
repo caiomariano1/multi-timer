@@ -1,4 +1,4 @@
-# Multi Timer
+# MultiTimer
 
 App de múltiplos cronômetros para desktop, inspirado no Relógio do Windows.
 
