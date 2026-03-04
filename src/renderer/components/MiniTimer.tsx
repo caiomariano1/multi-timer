@@ -36,10 +36,6 @@ const MiniTimerInner = ({ timerId, label }: MiniTimerProps) => {
     window.electronAPI?.expandMini(timerId);
   };
 
-  const handleClose = () => {
-    window.electronAPI?.closeMini(timerId);
-  };
-
   return (
     <div className="mini-timer">
       <div className="mini-timer__drag-bar">
@@ -62,20 +58,6 @@ const MiniTimerInner = ({ timerId, label }: MiniTimerProps) => {
               <path d="M146.67-160q-27 0-46.84-19.83Q80-199.67 80-226.67V-520h66.67v293.33h666.66v-506.66H440V-800h373.33q27 0 46.84 19.83Q880-760.33 880-733.33v506.66q0 27-19.83 46.84Q840.33-160 813.33-160H146.67Zm545.66-140L740-347.67l-142-141h113.33v-66.66H484.67v226.66h66.66V-441l141 141ZM80-586.67V-800h293.33v213.33H80ZM480-480Z" />
             </svg>
           </button>
-          {/* <button
-            className="mini-timer__bar-btn mini-timer__bar-btn--close"
-            onClick={handleClose}
-            title="Fechar"
-          >
-            <svg viewBox="0 0 16 16" fill="none">
-              <path
-                d="M4 4l8 8M12 4l-8 8"
-                stroke="currentColor"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-              />
-            </svg>
-          </button> */}
         </div>
       </div>
 

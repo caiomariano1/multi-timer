@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { v4 as uuidv4 } from 'uuid'
+import { arrayMove } from '@dnd-kit/sortable'
 import { Timer } from '../types/timer'
 import { saveTimers, loadTimers } from '../utils/storage'
 import { getElapsed } from '../utils/formatTime'
@@ -12,6 +13,7 @@ interface TimerStore {
   pauseTimer: (id: string) => void
   resetTimer: (id: string) => void
   renameTimer: (id: string, label: string) => void
+  reorderTimers: (activeId: string, overId: string) => void
   getTimer: (id: string) => Timer | undefined
   loadFromStorage: () => void
 }
@@ -83,6 +85,15 @@ export const useTimerStore = create<TimerStore>((set, get) => ({
     )
     set({ timers })
     saveTimers(timers)
+  },
+
+  reorderTimers: (activeId, overId) => {
+    const timers = get().timers
+    const oldIndex = timers.findIndex((t) => t.id === activeId)
+    const newIndex = timers.findIndex((t) => t.id === overId)
+    const reordered = arrayMove(timers, oldIndex, newIndex)
+    set({ timers: reordered })
+    saveTimers(reordered)
   },
 
   getTimer: (id) => get().timers.find((t) => t.id === id),

@@ -22,8 +22,6 @@
   --accent-light: rgba(0, 120, 212, 0.08);
   --danger: #c42b1c;
   --danger-hover: #b0261a;
-  --running: #107c10;
-  --running-bg: rgba(16, 124, 16, 0.08);
   --radius: 8px;
   --radius-sm: 4px;
   --shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
@@ -204,6 +202,7 @@ body,
 /* ─── TIMER CARD ─────────────────────────────── */
 
 .timer-card {
+  position: relative;
   background: var(--surface);
   border-radius: var(--radius);
   border: 1px solid var(--border-light);
@@ -295,26 +294,6 @@ body,
   box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.15);
 }
 
-/* Confirmação de exclusão inline */
-.timer-card__delete-confirm-msg {
-  flex: 1;
-  font-size: 12px;
-  color: var(--text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.timer-card__delete-confirm-msg strong {
-  color: var(--text-primary);
-}
-
-.timer-card__delete-confirm-actions {
-  display: flex;
-  gap: 4px;
-  flex-shrink: 0;
-}
-
 .timer-card__confirm-btn {
   font-family: var(--font-ui);
   font-size: 12px;
@@ -323,7 +302,9 @@ body,
   border-radius: var(--radius-sm);
   border: 1px solid transparent;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
 .timer-card__confirm-btn--cancel {
@@ -344,6 +325,38 @@ body,
 
 .timer-card__confirm-btn--danger:hover {
   background: #a8231a;
+}
+
+.timer-card__drag-handle {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  border-radius: var(--radius-sm);
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition:
+    background 0.15s,
+    color 0.15s;
+  touch-action: none;
+  flex-shrink: 0;
+}
+
+.timer-card__drag-handle svg {
+  width: 22px;
+  height: 22px;
+}
+
+.timer-card__drag-handle:hover {
+  background: var(--border-light);
+  color: var(--text-secondary);
+}
+
+.timer-card__drag-handle:active {
+  cursor: grabbing;
 }
 
 .timer-card__icon-btn {
@@ -372,9 +385,82 @@ body,
   color: var(--accent);
 }
 
-.timer-card__icon-btn--danger:hover {
+.timer-card__delete-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.timer-card__delete-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.timer-card__delete-btn:hover {
   background: rgba(196, 43, 28, 0.08);
   color: var(--danger);
+  border: 1.5px solid rgba(196, 43, 28, 0.25);
+}
+
+/* Modal de exclusão */
+.delete-modal__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.delete-modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-light);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  width: 280px;
+  max-width: calc(100vw - 40px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.delete-modal__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.delete-modal__body {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.delete-modal__body strong {
+  color: var(--text-primary);
+}
+
+.delete-modal__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 8px;
 }
 
 /* Display */
@@ -435,9 +521,21 @@ body,
 .timer-card__controls {
   display: flex;
   align-items: center;
+  margin-top: 18px;
+}
+
+.timer-card__controls::before {
+  content: "";
+  width: 32px;
+  flex-shrink: 0;
+}
+
+.timer-card__controls-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
   justify-content: center;
   gap: 16px;
-  margin-top: 18px;
 }
 
 .timer-card__play-btn {
@@ -473,13 +571,13 @@ body,
 }
 
 .timer-card__play-btn--running {
-  background: var(--running);
-  box-shadow: 0 2px 8px rgba(16, 124, 16, 0.3);
+  background: var(--accent);
+  box-shadow: 0 2px 8px rgba(0, 120, 212, 0.3);
 }
 
 .timer-card__play-btn--running:hover {
-  background: #0e6c0e;
-  box-shadow: 0 4px 12px rgba(16, 124, 16, 0.4);
+  background: var(--accent-hover);
+  box-shadow: 0 4px 12px rgba(0, 120, 212, 0.4);
 }
 
 .timer-card__secondary-btn {
@@ -582,11 +680,6 @@ html body #root {
   color: var(--text-primary);
 }
 
-.mini-timer__bar-btn--close:hover {
-  background: var(--danger);
-  color: white;
-}
-
 .mini-timer__display {
   flex: 1;
   display: flex;
@@ -684,12 +777,12 @@ html body #root {
 }
 
 .mini-timer__play-btn--running {
-  background: var(--running);
-  box-shadow: 0 2px 6px rgba(16, 124, 16, 0.3);
+  background: var(--accent);
+  box-shadow: 0 2px 6px rgba(0, 120, 212, 0.3);
 }
 
 .mini-timer__play-btn--running:hover {
-  background: #0e6c0e;
+  background: var(--accent-hover);
 }
 
 .mini-timer__reset-btn {

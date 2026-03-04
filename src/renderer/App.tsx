@@ -1,4 +1,16 @@
 import { useEffect } from "react";
+import {
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { useTimerStore } from "./store/timersStore";
 import { TimerCard } from "./components/TimerCard";
 import { MiniTimer } from "./components/MiniTimer";
@@ -13,7 +25,18 @@ const miniTimerId = params.get("timerId") ?? "";
 const miniLabel = decodeURIComponent(params.get("label") ?? "Cronômetro");
 
 export default function App() {
-  const { timers, addTimer, loadFromStorage } = useTimerStore();
+  const { timers, addTimer, loadFromStorage, reorderTimers } = useTimerStore();
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      reorderTimers(String(active.id), String(over.id));
+    }
+  };
 
   useEffect(() => {
     loadFromStorage();
@@ -65,15 +88,26 @@ export default function App() {
             </p>
           </div>
         ) : (
-          <div className="app__timers">
-            {timers.map((timer) => (
-              <TimerCard
-                key={timer.id}
-                timer={timer}
-                onMinimize={handleMinimize}
-              />
-            ))}
-          </div>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={timers.map((t) => t.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="app__timers">
+                {timers.map((timer) => (
+                  <TimerCard
+                    key={timer.id}
+                    timer={timer}
+                    onMinimize={handleMinimize}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
         )}
       </div>
     </div>
